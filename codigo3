@@ -1,0 +1,26 @@
+% codigo para graficar los vaores conocidos 
+
+x = local_time
+y = t2m
+
+plot(x,y)
+
+x1 = local_time
+y1 = prectotland
+
+plot(x1,y1)
+
+x2 = local_time
+y2 = rhoa
+
+plot(x2,y2)
+
+x3 = local_time
+y3 = swgdn
+
+plot(x3,y3)
+
+x4 = local_time
+y4 = swtdn
+
+plot(x4,y4)
