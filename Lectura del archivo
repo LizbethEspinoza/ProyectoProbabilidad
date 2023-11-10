@@ -1,0 +1,8 @@
+import csv
+
+archivo_csv = "data.csv"  #Especificamos el nombre de nuestro archivo o modificamos 
+
+with open(archivo_csv, 'r') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=';')  # Especifica el separador como “;”
+    for fila in csv_reader: #recorremos c/fila del archivo csv
+        print(fila) #imprimimos el contenido de nuestro archivo para visualizar
