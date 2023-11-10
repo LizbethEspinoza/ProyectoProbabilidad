@@ -1,0 +1,34 @@
+import csv
+import random #Utilizamos para generar valores aleatorios
+
+archivo_csv = "data.csv"
+umbral_min = 0  # Umbral mínimo de precipitación en mm/h (lluvias ligeras)
+umbral_max = 2.5  # Umbral máximo de precipitación en mm/h (lluvias ligeras)
+
+horas_aprovechamiento = [] #almacenamos las horas a aprovechar
+
+with open(archivo_csv, 'r') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=';')
+
+    for _ in range(3): #saltamos los encabezados del archivo
+        next(csv_reader)
+
+    for fila in csv_reader:
+        if len(fila) >= 3:
+            fecha_hora = fila[0]  # Fecha y hora
+            tasa_precipitacion_str = fila[2].replace(',', '.').strip() #obtenemos la columna a analisar la cual es la tasa de presipitacion
+            try:
+                tasa_precipitacion = float(tasa_precipitacion_str)
+            except ValueError:
+                continue
+
+            valor_aleatorio = random.uniform(umbral_min, umbral_max) #generamos un valor aleatorio entre los umbrales establecidos
+
+            if valor_aleatorio < tasa_precipitacion:
+                horas_aprovechamiento.append((fecha_hora, tasa_precipitacion))
+
+if horas_aprovechamiento:
+    for fecha_hora, tasa_precipitacion in horas_aprovechamiento:
+        print(f"Fecha y hora: {fecha_hora}, Tasa de precipitación: {tasa_precipitacion} mm/h (lluvias ligeras)")
+else:
+    print("No se encontraron horas de aprovechamiento en lluvias ligeras.")
