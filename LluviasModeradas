@@ -5,29 +5,39 @@ archivo_csv = "data.csv"
 umbral_min = 2.5  # Umbral mínimo de precipitación en mm/h (lluvias moderadas)
 umbral_max = 7.5  # Umbral máximo de precipitación en mm/h (lluvias moderadas)
 
-horas_aprovechamiento = []
+horas_aprovechamiento = []  # almacenamos las horas a aprovechar
+conteo_horas = 0  # contador de horas de aprovechamiento
+sumatoria_tasa_precipitacion = 0  
 
 with open(archivo_csv, 'r') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=';')
 
-    for _ in range(3):
+    for _ in range(3):  # saltamos los encabezados del archivo
         next(csv_reader)
 
     for fila in csv_reader:
         if len(fila) >= 3:
             fecha_hora = fila[0]  # Fecha y hora
-            tasa_precipitacion_str = fila[2].replace(',', '.').strip()
+            tasa_precipitacion_str = fila[2].replace(',', '.').strip()  # obtenemos la columna a analizar, la cual es la tasa de precipitación
             try:
                 tasa_precipitacion = float(tasa_precipitacion_str)
             except ValueError:
                 continue
 
-            valor_aleatorio = random.uniform(umbral_min, umbral_max)
+            valor_aleatorio = random.uniform(umbral_min, umbral_max)  # generamos un valor aleatorio entre los umbrales establecidos
 
             if valor_aleatorio < tasa_precipitacion:
                 horas_aprovechamiento.append((fecha_hora, tasa_precipitacion))
+                conteo_horas += 1
+                sumatoria_tasa_precipitacion += tasa_precipitacion
 
 if horas_aprovechamiento:
+    promedio_tasa_precipitacion = sumatoria_tasa_precipitacion / conteo_horas if conteo_horas > 0 else 0
+
+    print("Estadísticas de Aprovechamiento en Lluvias moderadas:")
+    print(f"Número de horas de aprovechamiento: {conteo_horas}")
+    print(f"Tasa de precipitación promedio durante el aprovechamiento: {promedio_tasa_precipitacion:.2f} mm/h")
+    print("\nDetalles de las horas de aprovechamiento:")
     for fecha_hora, tasa_precipitacion in horas_aprovechamiento:
         print(f"Fecha y hora: {fecha_hora}, Tasa de precipitación: {tasa_precipitacion} mm/h (lluvias moderadas)")
 else:
