@@ -1,0 +1,34 @@
+import csv
+import random
+
+archivo_csv = "data.csv"
+umbral_min = 2.5  # Umbral mínimo de precipitación en mm/h (lluvias moderadas)
+umbral_max = 7.5  # Umbral máximo de precipitación en mm/h (lluvias moderadas)
+
+horas_aprovechamiento = []
+
+with open(archivo_csv, 'r') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=';')
+
+    for _ in range(3):
+        next(csv_reader)
+
+    for fila in csv_reader:
+        if len(fila) >= 3:
+            fecha_hora = fila[0]  # Fecha y hora
+            tasa_precipitacion_str = fila[2].replace(',', '.').strip()
+            try:
+                tasa_precipitacion = float(tasa_precipitacion_str)
+            except ValueError:
+                continue
+
+            valor_aleatorio = random.uniform(umbral_min, umbral_max)
+
+            if valor_aleatorio < tasa_precipitacion:
+                horas_aprovechamiento.append((fecha_hora, tasa_precipitacion))
+
+if horas_aprovechamiento:
+    for fecha_hora, tasa_precipitacion in horas_aprovechamiento:
+        print(f"Fecha y hora: {fecha_hora}, Tasa de precipitación: {tasa_precipitacion} mm/h (lluvias moderadas)")
+else:
+    print("No se encontraron horas de aprovechamiento en lluvias moderadas.")
