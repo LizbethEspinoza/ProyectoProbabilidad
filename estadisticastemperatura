@@ -1,0 +1,33 @@
+import pandas as pd
+
+archivo_csv = "data.csv"
+
+# cargamos nuestro archivo CSV en el DataFrame de pandas
+df = pd.read_csv(archivo_csv, delimiter=';', skiprows=3, encoding='ISO-8859-1')
+
+# reemplazamos comas por puntos y convertimos a flotante
+def convertir_a_float(valor):
+    if isinstance(valor, str):
+        return float(valor.replace(',', '.'))
+    return valor
+
+# Aplicamos nuestra funcion a cada columna de nuestro archivo data.csv
+columnas_a_convertir = ['mm/h', 'kg/m³', ' W/m²', 'W/m²', 'grados centigrados ']
+for columna in columnas_a_convertir:
+    df[columna] = df[columna].apply(convertir_a_float)
+
+
+media_temperatura = df['grados centigrados '].mean()
+mediana_temperatura = df['grados centigrados '].median()
+desviacion_estandar_temperatura = df['grados centigrados '].std()
+minimo_temperatura = df['grados centigrados '].min()
+maximo_temperatura = df['grados centigrados '].max()
+
+
+# resultados finales: caso de temperaturas
+print("\nEstadísticas de Temperatura:")
+print(f"Media: {media_temperatura:.2f}")
+print(f"Mediana: {mediana_temperatura:.2f}")
+print(f"Desviación Estándar: {desviacion_estandar_temperatura:.2f}")
+print(f"Mínimo: {minimo_temperatura:.2f}")
+print(f"Máximo: {maximo_temperatura:.2f}")
