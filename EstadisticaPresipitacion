@@ -1,0 +1,35 @@
+import pandas as pd
+
+archivo_csv = "data.csv"
+
+# cargamos nuestro archivo CSV en el DataFrame de pandas
+df = pd.read_csv(archivo_csv, delimiter=';', skiprows=3, encoding='ISO-8859-1')
+
+# reemplazamos comas por puntos y convertimos a flotante
+def convertir_a_float(valor):
+    if isinstance(valor, str):
+        return float(valor.replace(',', '.'))
+    return valor
+
+# Aplicamos nuestra funcion a cada columna de nuestro archivo data.csv
+columnas_a_convertir = ['mm/h', 'kg/m³', ' W/m²', 'W/m²', 'grados centigrados ']
+for columna in columnas_a_convertir:
+    df[columna] = df[columna].apply(convertir_a_float)
+
+# Calculamos las estadísticas en C/caso
+media_precipitacion = df['mm/h'].mean()
+mediana_precipitacion = df['mm/h'].median()
+desviacion_estandar_precipitacion = df['mm/h'].std()
+minimo_precipitacion = df['mm/h'].min()
+maximo_precipitacion = df['mm/h'].max()
+
+
+# resultados finales: caso de presipitacion
+print("Estadísticas de Precipitación:")
+print(f"Media: {media_precipitacion:.2f}")
+print(f"Mediana: {mediana_precipitacion:.2f}")
+print(f"Desviación Estándar: {desviacion_estandar_precipitacion:.2f}")
+print(f"Mínimo: {minimo_precipitacion:.2f}")
+print(f"Máximo: {maximo_precipitacion:.2f}")
+
+
