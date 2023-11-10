@@ -1,0 +1,58 @@
+import csv
+
+archivo_csv = "data.csv"
+umbral_sequia = 0.01  # Umbral para definir sequía sector Balzay
+
+# Diccionario para almacenar la cuenta de meses con sequía
+meses_sequia = {}
+total_meses = 0
+
+with open(archivo_csv, 'r') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=';')
+
+    encabezados = next(csv_reader)
+    print("Encabezados encontrados:", encabezados)
+
+    # Obtener índice de la columna "prectotland" (tasa de precipitación)
+    try:
+        indice_precipitacion = encabezados.index('prectotland')
+    except ValueError:
+        print("Error: La columna 'prectotland' no se encontró en los encabezados.")
+        exit()
+
+    for fila in csv_reader:
+        try:
+            tasa_precipitacion_str = fila[indice_precipitacion].replace(',', '.').strip()
+            tasa_precipitacion = float(tasa_precipitacion_str)
+        except (ValueError, IndexError):
+            # Ignora filas con datos incorrectos o faltantes
+            continue
+
+        fecha_hora_parts = fila[0].split()
+        if len(fecha_hora_parts) < 2:
+            continue
+        
+        fecha, _ = fecha_hora_parts
+        mes_parts = fecha.split('/')
+
+        if len(mes_parts) < 2:
+            continue
+
+        mes = mes_parts[1]
+
+        # Actualisamos diccionario
+        if mes not in meses_sequia:
+            meses_sequia[mes] = 0
+
+        total_meses += 1
+        if tasa_precipitacion < umbral_sequia:
+            meses_sequia[mes] += 1
+
+print("\nProbabilidad de Sequía por Mes:")
+
+if total_meses == 0:
+    print("No hay datos suficientes para calcular la probabilidad.")
+else:
+    for mes, count_sequia in meses_sequia.items():
+        probabilidad_sequia = count_sequia / total_meses * 100
+        print(f"{mes}: {probabilidad_sequia:.2f}%")
